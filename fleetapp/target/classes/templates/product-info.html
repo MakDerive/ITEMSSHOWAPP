@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Getting Started: Serving Web Content</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<h1>BUYSELL</h1>
+	<h4> Подробная информация о товаре</h4>
+	<div th:each="image : ${images}">
+		<img alt="" th:src="'/images/'+ ${image.id}" height="60px"><br><br>
+	</div>
+	
+	
+	<b th:text="'Название товара: ' + ${product.title}"> </b></br>
+	<b th:text="'Описание товара: ' + ${product.description}"> </b></br>
+	<b th:text="'Цена: ' + ${product.price}"> </b></br>
+	<b th:text="'Город:' + ${product.city}"> </b></br>
+	<b th:text="'Автор: ' + ${product.author}"> </b></br>
+	<hr>
+	<h3>Удалить товар</h3>
+	<form th:action="'/product/delete/' + ${product.id}" method="post">
+		<input type="submit" value="Удалить товар">
+	</form>
+	
+</body>
+</html>
