@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Getting Started: Serving Web Content</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<h1>BUYSELL</h1><hr>
+	<h4> Панель админа </h4>
+	
+	<table>
+		<tr>
+			<th>Номер</th>
+			<th>Активность</th>
+			<th>Роли</th>
+			<th>Бан</th>
+			<th>Редактировать</th>
+			<th>Подробная информация</th>
+		</tr>
+		<tr th:each="user : ${users}">
+			<!-- <th th:text="${user.email}">Email</th> -->
+			<th th:text="${user.phoneNumber}">Номер</th>
+			<th th:text="${user.active}">Активность</th>
+			<th th:each="role : ${user.roles}">
+				<span th:text="'Роль:' + ${role} + ',' "></span>
+			</th>
+			<th>
+				<form th:action="'/admin/user/ban/'+ ${user.id}">
+					<input type="hidden" name="_csrf" value="${_csrf.token}">
+					<input type="submit" value="Бан">
+				</form>
+			</th>
+			<th>a<a th:href="'/admin/user/edit/'+${user.id}">Редактировать</a></th>
+			<th> <a th:href="'/user/'+${user.id}"> Подробная информация </a></th>
+		</tr>
+	</table>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.example.fleetapp.controllers;
 
 import java.io.IOException;
+import java.security.Principal;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +27,9 @@ public class ProductController {
 	
 	
 	@GetMapping("/")
-	public String products(@RequestParam(name="title",required = false) String title, Model model) {
+	public String products(@RequestParam(name="title",required = false) String title, Principal principal,Model model) {
 		model.addAttribute("products",productService.listProducts(title));
+		model.addAttribute("user",productService.getUserByPrincipal(principal));
 		return "products";
 	}
 	
@@ -42,8 +44,8 @@ public class ProductController {
 	
 	@PostMapping("/product/create")
 	public String createProduct(@RequestParam MultipartFile file1,
-			@RequestParam MultipartFile file2, @RequestParam MultipartFile file3, Product product) throws IOException {
-		productService.saveProduct(product, file1, file2, file3);
+			@RequestParam MultipartFile file2, @RequestParam MultipartFile file3, Product product,Principal principal) throws IOException {
+		productService.saveProduct(principal,product, file1, file2, file3);
 		return "redirect:/";
 	}
 	

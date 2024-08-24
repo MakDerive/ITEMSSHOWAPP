@@ -6,11 +6,22 @@
 </head>
 <body>
 
-	<h1>BUYSELL | <a href="/login">Войти</a></h1>
-	<form action="/logout">
-		<input type="hidden" name="_csrf" value="${_scrf.token}">
-		<input type="submit" value="Выйти">
-	</form>
+	<h1>BUYSELL</h1>
+	<div th:if="${user.email}">
+	  <h3>Имя пользователя <i th:text="${user.name}"></i></h3>
+	  <form action="/logout">
+	    <input type="hidden" name="_csrf" value="${_scrf.token}">
+	    <input type="submit" value="Выйти">
+	  </form>
+	</div>
+	<div th:unless="${user.email}">
+	  <a href="/login">Войти</a>
+	</div>
+	
+	<div th:if="${user.isAdmin()}">
+		<a href="/admin"> Панель администратора </a>
+	</div>
+	
 	<h4> Товары со всей России</h4>
 	
 	<form action="/" method="get">
@@ -28,18 +39,18 @@
 	</div>
 	<hr>
 	<h3>Создать новый товар</h3>
-	<form action="/product/create" method="post" enctype="multipart/form-data">
-		Название объявления: <input type="text" name="title"><br><br>
-		Описание объявления: <input type="text" name="description"><br><br>
-		Цена: <input type="text" name="price"><br><br>
-		Город: <input type="text" name="city"><br><br>
-		Имя: <input type="text" name="author"><br><br>
-		Фотография 1: <input type="file" name="file1"><br><br>
-		Фотография 2: <input type="file" name="file2"><br><br>
-		Фотография 3: <input type="file" name="file3"><br><br>
-		
-		<input type="submit" value="Добваить товар">
-	</form>
-	
+	<div th:if="${user.email}">
+		<form action="/product/create" method="post" enctype="multipart/form-data">
+			Название объявления: <input type="text" name="title"><br><br>
+			Описание объявления: <input type="text" name="description"><br><br>
+			Цена: <input type="text" name="price"><br><br>
+			Город: <input type="text" name="city"><br><br>
+			Фотография 1: <input type="file" name="file1"><br><br>
+			Фотография 2: <input type="file" name="file2"><br><br>
+			Фотография 3: <input type="file" name="file3"><br><br>
+			<input type="hidden" name="_csrf" value="${_csrf.token}">
+			<input type="submit" value="Добваить товар">
+		</form>
+	</div>
 </body>
 </html>

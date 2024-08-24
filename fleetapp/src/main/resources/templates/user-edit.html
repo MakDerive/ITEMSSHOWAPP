@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Getting Started: Serving Web Content</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<h1>BUYSELL</h1>
+	<h3>Редактировать пользователя <span th:text="${user.name}"></span></h3>
+	
+	<form action="/admin/user/edit" method="post">
+		<div th:each="role : ${roles}">
+			<label>
+				<input type="checkbox" th:value="${role}" name="roles" th:checked="${user.roles.contains(role)}">
+			    <span th:text="${role}">Role</span>
+			 </label>
+		</div>
+		<input type="hidden" value="${user.id}" name="userId"> 
+		<input type="hidden" value="${_csrf.token}" name="_csrf">
+		<button type="submit">Сохранить</button>
+	</form>	
+	
+</body>
+</html>

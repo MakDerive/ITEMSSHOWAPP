@@ -3,9 +3,11 @@ package com.example.fleetapp.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.fleetapp.models.User;
+import com.example.fleetapp.models.enums.Role;
 import com.example.fleetapp.services.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,13 @@ public class UserController {
 			return "registration";
 		}
 		return "redirect:/login";
+	}
+	
+	@GetMapping("/user/{user}")
+	public String userInfo(@PathVariable("user") User user,Model model) {
+		model.addAttribute("user",user);
+		model.addAttribute("products",user.getProducts());
+		return "user-info";
 	}
 	
 	

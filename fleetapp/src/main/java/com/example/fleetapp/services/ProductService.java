@@ -1,6 +1,7 @@
 package com.example.fleetapp.services;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.fleetapp.models.Image;
 import com.example.fleetapp.models.Product;
-import com.example.fleetapp.repositories.ProductRepository;
-
+import com.example.fleetapp.models.User;
+import com.example.fleetapp.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,13 +20,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ProductService {
 	private final ProductRepository productRepositroy;
+	private final UserRepository userRepository;
 	
 	public List<Product> listProducts(String title){
 		if (title !=null) return productRepositroy.findByTitle(title);
 		return productRepositroy.findAll();
 	}
 	
-	public void saveProduct(Product product,MultipartFile file1,MultipartFile file2,MultipartFile file3) throws IOException {
+	public void saveProduct(Principal principal, Product product,MultipartFile file1,MultipartFile file2,MultipartFile file3) throws IOException {
+		product.setUser(getUserByPrincipal(principal));
+		
 		Image image1;
 		Image image2;
 		Image image3;
@@ -60,12 +64,17 @@ public class ProductService {
 			e.printStackTrace();
 		}
 		
-		log.info("Saving new Product. Title: {}; Author: {}",product.getTitle(),product.getAuthor());
+		log.info("Saving new Product. Title: {}; Author: {}",product.getTitle(),product.getUser().getEmail());
 		Product productFromDb = productRepositroy.save(product);
 		productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
 		productRepositroy.save(product);
 	}
 	
+	public User getUserByPrincipal(Principal principal) {
+		if(principal==null) return new User();
+		return userRepository.findByEmail(principal.getName());
+	}
+
 	private Image toImageEntity(MultipartFile file) throws IOException {
 		Image image = new Image(); 
 		image.setName(file.getName());

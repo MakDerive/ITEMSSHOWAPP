@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Getting Started: Serving Web Content</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<h1>BUYSELL</h1>
+	<h3>Подробная инфоромация о пользователе <span th:text="${user.name}"></span></h3>
+	<b>Номер телефона: </b> <span th:text="${user.phoneNumber}"></span><br>
+	<b>Email: </b> <span th:text="${user.email}"></span><br>
+	
+	
+	<h4 th:text="'Товары пользователя '+${user.name}"></h4>
+	
+	<div th:each="product : ${products}">
+		<p>
+			<b th:text="'Title: '+${product.title} + ' Price: '+${product.price} "></b>
+			<a th:href="'/product/'+${product.id}">Подробнее...</a>
+		</p>
+	</div>
+	
+</body>
+</html>

@@ -1,7 +1,14 @@
 package com.example.fleetapp.services;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.fleetapp.models.User;
 import com.example.fleetapp.models.enums.Role;
@@ -26,5 +33,36 @@ public class UserService {
         log.info("Saving new User with email: {}", userEmail);
         userRepository.save(user);
         return true;
+    }
+    
+    public List<User> list(){
+    	return userRepository.findAll();
+    }
+    
+    public void banUser(Long id) {
+    	User user = userRepository.findById(id).orElse(null);
+    	if(user !=null) {
+    		if(user.isActive()) {
+    			user.setActive(false);
+    		} else {
+    			user.setActive(true);
+    		}
+    		log.info("Ban user with id = {}; email: {}",user.getId(),user.getEmail());
+    	}
+    	userRepository.save(user);
+    }
+    
+    public void changeUserRoles(User user,Map<String,String> form) {
+    	Set<String> roles= Arrays.stream(Role.values())
+    			.map(Role::name)
+    			.collect(Collectors.toSet());
+    	user.getRoles().clear();
+    	for(String key : form.keySet()) {
+    		if (roles.contains(key)) {
+    			user.getRoles().add(Role.valueOf(key));
+    		}
+    	}
+    	userRepository.save(user);
+    	
     }
 }
